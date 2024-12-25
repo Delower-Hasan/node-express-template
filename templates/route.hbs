@@ -1,0 +1,13 @@
+import { Router } from 'express' 
+import { {{camelCase name}}Controller as controller } from './{{camelCase name}}.controller'
+import { {{camelCase name}}Zod as zod } from './{{camelCase name}}.zod' 
+import { validateZod } from '../../middlewares'
+
+const router = Router()
+router.post('/', validateZod(zod.createOperation), controller.createOperation) 
+router.get('/',validateZod(zod.queryOperation), controller.queryOperation) 
+router.get('/:id',validateZod(zod.getOperation), controller.getOperation) 
+router.patch('/:id',validateZod(zod.updateOperation), controller.updateOperation) 
+router.delete('/:id', validateZod(zod.deleteOperation), controller.deleteOperation) 
+  
+export const {{pascalCase name}}Route = router

@@ -1,0 +1,11 @@
+import { Types, Model } from 'mongoose';
+
+export type I{{pascalCase name}} = {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type I{{pascalCase name}}Model = Model<I{{pascalCase name}}>;

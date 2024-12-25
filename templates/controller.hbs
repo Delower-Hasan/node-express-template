@@ -1,0 +1,59 @@
+import asyncHandler from 'express-async-handler'
+import { apiResponse } from '../../../shared'
+import { I{{pascalCase name}} as IType } from './{{camelCase name}}.interface'
+import { {{pascalCase name}} as Model } from './{{camelCase name}}.model'
+import { {{camelCase name}}Service as service } from './{{camelCase name}}.service'
+
+const createOperation = asyncHandler(async (req, res) => {
+  const { data } = await service.createOperation(req.body, req.user)
+
+  apiResponse<Partial<IType>>(res, {
+    message: `${Model.modelName} created successfully.`,
+    data
+  })
+})
+
+const getOperation = asyncHandler(async (req, res) => {
+  const { data } = await service.getOperation(req.params.id, req.query, req.user)
+
+  apiResponse<Partial<IType>>(res, {
+    message: `${Model.modelName} fetched successfully.`,
+    data
+  })
+})
+
+const queryOperation = asyncHandler(async (req, res) => {
+  const { data, pagination } = await service.queryOperation(req.query, req.user)
+
+  apiResponse<Partial<IType>[]>(res, {
+    message: `${Model.modelName} fetched successfully.`,
+    data,
+    pagination
+  })
+})
+
+const updateOperation = asyncHandler(async (req, res) => {
+  const { data } = await service.updateOperation(req.params.id, req.body, req.user)
+
+  apiResponse<Partial<IType>>(res, {
+    message: `${Model.modelName} updated successfully.`,
+    data
+  })
+})
+
+const deleteOperation = asyncHandler(async (req, res) => {
+  const { data } = await service.deleteOperation(req.params.id, req.user)
+
+  apiResponse<Partial<IType>>(res, {
+    message: `${Model.modelName} deleted successfully.`,
+    data
+  })
+})
+
+export const {{camelCase name}}Controller = {
+  createOperation,
+  queryOperation,
+  getOperation,
+  updateOperation,
+  deleteOperation
+}

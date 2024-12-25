@@ -1,0 +1,82 @@
+
+import { TCreate, TDelete, TGet, TQuery, TReqQuery, TUpdate } from '../../../global/types'
+import { paginationMaker, paginationPicker } from '../../../shared'
+import { I{{pascalCase name}} as IType } from './{{camelCase name}}.interface'
+import { {{pascalCase name}} as Model } from './{{camelCase name}}.model'
+
+const createOperation: TCreate<IType> = async data => {
+  const result = await Model.create(data)
+
+  return { data: result }
+}
+
+const queryOperation: TQuery<IType> = async query => {
+  const { page, limit, skip, sort } = paginationPicker(query)
+  const { search, status, populate } = query
+
+  const searchCriteria: TReqQuery = {}
+
+  if (search) {
+    searchCriteria.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } }
+    ]
+  }
+
+  if (status) {
+    const statusArray = typeof status === 'string' ? status.split(',') : status
+    searchCriteria.status = { $in: statusArray }
+  }
+
+  const populateFields = []
+
+  if (populate?.includes('category')) {
+    populateFields.push({ path: 'category' })
+  }
+
+  const [result, count] = await Promise.all([
+    Model.find(searchCriteria, '', { limit, skip, sort }).populate(populateFields),
+    Model.countDocuments(searchCriteria)
+  ])
+
+  const pagination = paginationMaker(page, limit, count)
+
+  return {
+    data: result,
+    pagination
+  }
+}
+
+const getOperation: TGet<IType> = async id => {
+  const result = await Model.findById(id, '', {
+    mongooseNullError: true
+  })
+
+  return { data: result }
+}
+
+const updateOperation: TUpdate<IType> = async (id, payload) => {
+  const result = await Model.findByIdAndUpdate(id, payload, {
+    mongooseNullError: true,
+    runValidators: true,
+    new: true
+  })
+
+  return { data: result }
+}
+
+const deleteOperation: TDelete<IType> = async id => {
+  const result = await Model.findByIdAndDelete(id, {
+    mongooseNullError: true
+  })
+
+  return { data: result }
+}
+
+export const {{camelCase name}}Service = {
+  createOperation,
+  queryOperation,
+  getOperation,
+  updateOperation,
+  deleteOperation
+}

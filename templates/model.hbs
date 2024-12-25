@@ -1,0 +1,18 @@
+import { Schema, model } from 'mongoose'
+import { I{{pascalCase name}}, I{{pascalCase name}}Model  } from './{{camelCase name}}.interface'
+
+const schema = new Schema<I{{pascalCase name}}, I{{pascalCase name}}Model>(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true }
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    id: false
+  }
+)
+
+export const {{pascalCase name}} = model<I{{pascalCase name}}, I{{pascalCase name}}Model>('{{pascalCase name}}', schema)
