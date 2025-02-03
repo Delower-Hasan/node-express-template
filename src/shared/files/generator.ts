@@ -20,11 +20,7 @@ export const generateExpire = (hours: number): string => {
   const expireDate = new Date(now.getTime() + hours * 60 * 60 * 1000)
   return expireDate.toISOString()
 }
-export const generatePSNExpire = (seconds: number): string => {
-  const now = new Date()
-  const expirationDate = new Date(now.getTime() + seconds * 1000).toISOString()
-  return expirationDate
-}
+
 
 export const generateUsername = (length: number): string => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'

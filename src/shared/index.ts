@@ -11,7 +11,7 @@ import { logger } from './files/logger'
 import { paginationMaker, paginationPicker } from './files/pagination'
 import { deleteFileFromS3 } from './files/s3'
 import { isObjectWithKey, slugMaker } from './files/utils'
-import { VerifyPSNAccount } from './files/VerifyPSNAccount'
+
 export {
   ApiError,
   apiResponse,
@@ -25,6 +25,6 @@ export {
   logger,
   paginationMaker,
   paginationPicker,
-  slugMaker,
-  VerifyPSNAccount
+  slugMaker
 }
+

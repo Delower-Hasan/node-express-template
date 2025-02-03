@@ -8,8 +8,7 @@ import {
   generateHashToken,
   generateOTP,
   generateToken,
-  generateUsername,
-  VerifyPSNAccount
+  generateUsername
 } from '../../../shared'
 import { sendForgotOTPMail } from '../../../shared/files/Mail'
 import { Token } from '../token/token.model'
@@ -45,13 +44,11 @@ const login = async (data: TLogin) => {
     first_name: result.first_name,
     last_name: result.last_name,
     username: result.username,
-    playstation: result.playstation,
     email: result.email,
     profile_image: result.profile_image,
     is_email_verified: result.is_email_verified,
     role: result.role,
     status: result.status,
-    PSN_info: result.PSN_info
   }
 
   const tokenData = { _id: initial._id, role: initial.role }
@@ -66,15 +63,7 @@ const login = async (data: TLogin) => {
   return { data: payload }
 }
 
-const VerifyPSNUser = async (data: { psn_code: string; psn_username: string }) => {
-  const { payload: pnsInfos } = await VerifyPSNAccount(data.psn_code, data.psn_username)
-  const payload = {
-    PSN_info: {
-      is_psn_verified: pnsInfos.is_psn_verified
-    }
-  }
-  return { data: payload }
-}
+
 
 const oauth = async ({ type, access_token }: { type: 'google' | 'facebook'; access_token: string }) => {
   let auth: { id: string; name: string; email: string; provider: 'google' | 'facebook' } | null = null
@@ -146,10 +135,6 @@ const oauth = async ({ type, access_token }: { type: 'google' | 'facebook'; acce
       username: generateUsername(8),
       profile_image: '',
       role: 'user',
-      metamask: '',
-      playstation: '',
-      stream: '',
-      xbox: '',
       status: 'active',
       oauth: [{ id: auth.id, provider: auth.provider }]
     })
@@ -178,13 +163,11 @@ const oauth = async ({ type, access_token }: { type: 'google' | 'facebook'; acce
     first_name: result.first_name,
     last_name: result.last_name,
     username: result.username,
-    playstation: result.playstation,
     email: result.email,
     profile_image: result.profile_image,
     is_email_verified: result.is_email_verified,
     role: result.role,
     status: result.status,
-    PSN_info: result.PSN_info
   }
 
   const tokenData = { _id: initial._id!.toString(), role: initial.role }
@@ -284,7 +267,6 @@ export const AuthService = {
   registration,
   login,
   oauth,
-  VerifyPSNUser,
   resetPassword,
   forgotPassword
 }

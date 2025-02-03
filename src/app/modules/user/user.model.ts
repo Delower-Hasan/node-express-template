@@ -4,7 +4,6 @@ import { Schema, model } from 'mongoose'
 import mongooseNullError from 'mongoose-null-error'
 import config from '../../../config'
 import { xOAuthProvider, xRole, xUserStatus } from '../../../global/constant'
-import { sendPSNVerificationMail } from '../../../shared/files/Mail'
 import { generateUsername } from './../../../shared/files/generator'
 import { IUser, IUserModel } from './user.interface'
 
@@ -29,16 +28,7 @@ const schema = new Schema<IUser, IUserModel>(
     password: { type: String, required: true, select: 0 },
     role: { type: String, enum: xRole, required: true },
     profile_image: { type: String, trim: true, default: '' },
-    metamask: { type: String, trim: true, default: '', unique: true },
-    playstation: { type: String, trim: true, unique: true, default: '' },
-    xbox: { type: String, trim: true, unique: true, default: '' },
-    stream: { type: String, trim: true, unique: true, default: '' },
     is_email_verified: { type: Boolean, default: false },
-    PSN_info: {
-      type: {
-        is_psn_verified: { type: Boolean, default: false }
-      }
-    },
     oauth: [oauthSchema],
     status: { type: String, enum: xUserStatus, default: 'active' }
   },
@@ -76,12 +66,6 @@ schema.pre('save', async function () {
 schema.post('save', async function () {
   this.password = await User.hashGenerator(this.password)
   this.username = this.username || generateUsername(8)
-  const psnInfo = {
-    first_name: this.first_name,
-    email: this.email,
-    token: this.username //psn_username
-  }
-  await sendPSNVerificationMail(psnInfo)
 })
 
 schema.pre(['updateOne', 'findOneAndUpdate'], async function () {
