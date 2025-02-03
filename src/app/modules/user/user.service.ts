@@ -1,7 +1,5 @@
-import httpStatus from 'http-status'
 import { TCreate, TDelete, TGet, TQuery, TReqQuery, TUpdate } from '../../../global/types'
-import { ApiError, paginationMaker, paginationPicker, VerifyPSNAccount } from '../../../shared'
-import { Participant } from '../participant/participant.model'
+import { paginationMaker, paginationPicker } from '../../../shared'
 import { IUser as IType } from './user.interface'
 import { User as Model } from './user.model'
 
@@ -30,7 +28,7 @@ const queryOperation: TQuery<IType> = async query => {
     searchCriteria.role = { $in: roleArray }
   }
 
-  const equalityFields = ['metamask', 'playstation', 'xbox', 'stream', 'is_email_verified']
+  const equalityFields = ['is_email_verified']
   equalityFields.forEach(field => {
     if (query[field]) {
       searchCriteria[field] = query[field]
@@ -60,26 +58,10 @@ const getOperation: TGet<IType> = async (id, query) => {
     mongooseNullError: true
   })
 
-  let stats = null
-
-  if (query.get === 'stats') {
-    stats = await Participant.getUserStats(id)
-  }
-
-  return { data: { ...result?.toObject(), ...(stats ? { stats } : {}) } }
+  return { data: result }
 }
 
 const updateOperation: TUpdate<IType> = async (id, payload) => {
-  const isExist = await Model.findOne({ username: payload.username }).lean()
-  if (!isExist) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Code is not Matched!')
-  }
-  if (payload.username && payload.playstation && payload.PSN_info?.is_psn_verified) {
-    const { payload: data } = await VerifyPSNAccount(payload.username, payload.playstation)
-    if (!data.is_psn_verified) {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Username changed, it's not verified!")
-    }
-  }
   const result = await Model.findByIdAndUpdate(id, payload, {
     mongooseNullError: true,
     runValidators: true,

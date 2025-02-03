@@ -29,13 +29,6 @@ const oauth = asyncHandler(async (req, res) => {
     data
   })
 })
-const VerifyPSNUser = asyncHandler(async (req, res) => {
-  const { data } = await service.VerifyPSNUser(req.body)
-  apiResponse<Partial<IType>>(res, {
-    message: `Verified ${User.modelName}.`,
-    data
-  })
-})
 
 const resetPassword = asyncHandler(async (req, res) => {
   const { data } = await service.resetPassword(req.body, req.user)
@@ -59,7 +52,6 @@ export const AuthController = {
   registration,
   login,
   oauth,
-  VerifyPSNUser,
   resetPassword,
   forgotPassword
 }

@@ -6,7 +6,6 @@ const registration = z.object({
     .strictObject({
       first_name: z.string(),
       last_name: z.string(),
-      playstation: z.string(),
       email: z.string().email(),
       password: z.string().regex(xPassword),
       role: z.enum(xRole as [string]),
@@ -33,12 +32,7 @@ const oauth = z.object({
     access_token: z.string()
   })
 })
-const VerifyPSNUser = z.object({
-  body: z.strictObject({
-    psn_code: z.string(),
-    psn_username: z.string()
-  })
-})
+
 
 const resetPassword = z.object({
   body: z
@@ -64,7 +58,6 @@ export const AuthZod = {
   registration,
   login,
   oauth,
-  VerifyPSNUser,
   resetPassword,
   forgotPassword
 }

@@ -1,6 +1,6 @@
 import { JwtPayload, Secret } from 'jsonwebtoken'
 import { Model, Types } from 'mongoose'
-import { TOAuthProvider, TPSNResp, TRole, TUserStatus } from '../../../global/types'
+import { TOAuthProvider, TRole, TUserStatus } from '../../../global/types'
 
 export type IUser = {
   _id: Types.ObjectId
@@ -9,13 +9,8 @@ export type IUser = {
   username: string
   email: string
   password: string
-  PSN_info: TPSNResp
   role: TRole
   profile_image: string
-  metamask: string
-  playstation: string
-  xbox: string
-  stream: string
   is_email_verified: boolean
   oauth: {
     id: string
